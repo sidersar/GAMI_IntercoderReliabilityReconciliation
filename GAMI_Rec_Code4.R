@@ -1,7 +1,7 @@
 # GAMI Reconciliation
 # ARSiders
 # Spring 2020
-
+# this is a test
 setwd("C:/Users/AR Siders/OneDrive - UD College of Arts and Sciences/Projects/1 - Adapt Collab Coding - Ford/QC Reconciliation")
 
 # ======= IMPORT DATA 
