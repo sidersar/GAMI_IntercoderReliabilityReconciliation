@@ -1,6 +1,7 @@
 # GAMI Reconciling Differences in Coder Responses
 # ARSiders (siders@udel.edu)
 # Spring 2020
+# Mozilla Public License 2.0 (https://www.mozilla.org/en-US/MPL/2.0/)
 
 
 # =============== DATA ON CODING
@@ -1084,4 +1085,3 @@ Process_Imp <- function(d, shelldf, j) {
 # }
 # 
 # test<-multunrels(shelldf,data,case5)
-
