@@ -81,8 +81,8 @@ cleandata <- function(data){
   data[,30] <- as.character(data[,30])
   data[,35] <- as.character(data[,35])
   data[,35] <- trimws(data[,35])
-  data[,36] <- as.numeric(data[,36])
-  
+  data[,36] <- as.character(data[,36])
+
   #correcting some imports by l.berrangford & alexandra.lesnikowski
   if ((data[,2]=="l.berrangford") || (data[,2]=="alexandra.lesnikowski")){
     if (data[,5]=="NS"){
@@ -94,6 +94,7 @@ cleandata <- function(data){
   }
   
   # cleaning data to have only one implementation stage
+  data[,66]<-NA
   for (i in 1:nrow(data)){
     # if a coder assigned multiple implementation stages
     allstages <- unlist(strsplit(data[i,35],split='|||', fixed=TRUE))
@@ -122,22 +123,22 @@ cleandata <- function(data){
         data[i,35] <- "Vulnerability assessment and/or early planning"
       }
       else if (data[i,35] == ""){
-        data[i,36] <- 0
+        data[i,66] <- 0
       }
       else if (strcmp(data[i,35],"Vulnerability assessment and/or early planning")){
-        data[i,36] <- 1
+        data[i,66] <- 1
       }
       else if (strcmp(data[i,35],"Adaptation planning & early implementation")){
-        data[i,36] <- 2  
+        data[i,66] <- 2  
       }  
       else if (strcmp(data[i,35], "Implementation expanding")){
-        data[i,36] <- 3
+        data[i,66] <- 3
       }
       else if (strcmp(data[i,35], "Implementation widespread")){
-        data[i,36] <- 4
+        data[i,66] <- 4
       }
       else if (strcmp(data[i,35],"Evidence of risk reduction associated with adaptation efforts")){
-        data[i,36] <- 5
+        data[i,66] <- 5
       }
     }
   }
@@ -145,22 +146,22 @@ cleandata <- function(data){
   # second for loop -- now that we've cleaned up the text, assign numeric score
   for (i in 1:nrow(data)){      
     if (strcmp(data[i,35], "Vulnerability assessment and/or early planning")){
-      data[i,36] <- 1
+      data[i,66] <- 1
     }
     else if (strcmp(data[i,35],"Adaptation planning & early implementation")){
-      data[i,36] <- 2  
+      data[i,66] <- 2  
     }  
     else if (strcmp(data[i,35], "Implementation expanding")){
-      data[i,36] <- 3
+      data[i,66] <- 3
     }
     else if (strcmp(data[i,35],"Implementation widespread")){
-      data[i,36] <- 4
+      data[i,66] <- 4
     }
     else if (strcmp(data[i,35], "Evidence of risk reduction associated with adaptation efforts")){
-      data[i,36] <- 5
+      data[i,66] <- 5
     }
   }
-  data[,36] <- as.numeric(data[,36])
+  data[,66] <- as.numeric(data[,66])
   return(data)  
 }
 
@@ -175,7 +176,7 @@ cleandata <- function(data){
 
 # calcluate % blank answers to important questions 
 
-blanks <- function(data,cutoff){
+blanks <- function(data,cutoff.bl){
   coders <-as.vector(unique(data[,2], incomparables = FALSE))
   table <- as.data.frame(matrix(nrow=length(coders), ncol=7))
   colnames(table) <- c("User","Articles","ImpBlanks","%Total","%Imp","TotalSig","ImpSig")
@@ -257,15 +258,16 @@ blanks <- function(data,cutoff){
 }
 
 # label coders where % blanks > % (cutoff)
-formtblanks <- function(table, cutoff){
+formtblanks <- function(data, cutoff.bl){
+  table<-blanks(data,cutoff.bl)
   coders <-as.vector(unique(data[,2], incomparables = FALSE))
   table[,1] <- coders
   for (j in 1:length(coders)){
-    if (table[j,4]>cutoff){
+    if (table[j,4]>cutoff.bl){
       table[j,6] <- 's'
     }
     else table[j,6] <- ''
-    if (table[j,5]>cutoff){
+    if (table[j,5]>cutoff.bl){
       table[j,7] <- 's'
     }
     else table[j,7] <- ''
@@ -280,8 +282,15 @@ formtblanks <- function(table, cutoff){
 # Check whether coders over- or under-include 
 # compare exclusion and inclusion rates to team averages (of coders who coded more than 20 papers)
 
-ratescomparison <- function(data,completeness,teams,cutoff){
+ratescomparison <- function(data,teams.table,cutoff.bl,cutoff.inc){
+  data <- cleandata(data)
   coders <-as.vector(unique(data[,2], incomparables = FALSE))
+  print("Assigning teams")
+  teams<-teams.vector(teams.table)
+  print(c("Calculating blank entries",cutoff.bl,"% empty"))
+  completeness<-formtblanks(data,cutoff.bl)
+
+  print(c("Calculating over/under inclusion",cutoff.inc,"% deviation"))
   # add columns to table 
   table <- as.data.frame(matrix(nrow=length(coders), ncol=11))
   colnames(table) <- c("User","Articles","#ImpBlanks","%ImpBlanks","BlanksSig","Team","TeamExcRate","IndivExclRate","TeamInclRate","IndivInclRate","Deviation")
@@ -354,10 +363,10 @@ ratescomparison <- function(data,completeness,teams,cutoff){
     else if ((is.na(Edif)) || (is.na(Idif))) {
       table[table$User==coders[j],11] <- "na"
     }
-    else if (Edif > cutoff) {
+    else if (Edif > cutoff.inc) {
       table[table$User==coders[j],11] <- "OverExcl"
     }
-    else if (Idif > cutoff) {
+    else if (Idif > cutoff.inc) {
       table[table$User==coders[j],11] <- "OverIncl"
     }
     else table[table$User==coders[j],11] <- ""
@@ -406,8 +415,7 @@ unreliablecoders <- function(table){
   
   longlist <- c(overex.coders, overin.coders, empty.coders)
   unrelcoders <- unique(longlist, incomparables = FALSE)
-
+  print(c("Number unreliable coders",length(unrelcoders)))
+  print(unrelcoders)
   return(unrelcoders)
 }
-
-
