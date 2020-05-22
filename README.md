@@ -1,5 +1,7 @@
 # Intercoder-Reliability-Rec
+
 Global Adaptation Mapping Initiative (GAMI)
+
 Coder Reliability Check (Quality Control) and Intercoder Reconciliation
 
 Rationale for Quality Check
@@ -11,6 +13,7 @@ each coder and identifies coders who do not provide complete codes (answer all q
 (assessed as coders who over- or under-include articles relative to other coders on their team). 
 
 Completeness
+
 Coder responses to 16 questions are examined. These questions are considered important for the analysis, are not dependent
 on any other questions, and are relatively straightforward (e.g., TRUE/FALSE, name a continent). Coders who left more than 10% of these 
 answers blank (for articles that they said should be included in the analysis and marked as sufficient to code) are considered
@@ -22,6 +25,7 @@ Actors undertaking adaptation (drop-down menu), Type of adaptation response (dro
 Evidence of reduced risk (True/False), Indicators of Success (True/False), Limits approached (True/False)
 
 Follows Instructions
+
 Coders were asked to decided whether an article should be included in the analysis and were given critera to make this decision. 
 Coders reached different decisions. Some coders excluded many articles, while others included many of the same set of articles. A few
 differences may be due to personal interpretation of the guidelines. However, systematic over- or under-inclusion may indicate
@@ -38,9 +42,13 @@ Rationale for Intercoder Reconciliation
 
 Articles were divided into 4 cases depending on whether they were coded by one or more coders and whether those coders were reliable
 or unreliable. 
+
 Case 1: Article coded by one unreliable coder (not included in reconciled data)
+
 Case 2: Article coded by two unreliable coders (not included unless a third person reviews)
+
 Case 3: Article coded by one reliable coder
+
 Case 4: Article coded by two coders (at least one reliable)
 
 In Case 3, there is only one coder so there is no need for intercoder reconciliation. 
@@ -55,38 +63,68 @@ false negatives are more likely than false positives and because this means our 
 than less whenever a question arises).
 
 Include:              If either coder says the article should be included, it is included
+
 Sufficient:           If either coder says the article is sufficient for analysis, it is included
+
 Geography (Continent): If coders do not agree, all answers are accepted
+
 Geography (Nation):   If coders do not agree, all answers are accepted
+
 Sector:               If coders do not agree, all answers are accepted
+
 Cross-cutting topics: If coders do not agree, all answers are accepted
+
 Indigenous knowledge: If either coder says it was present, marked as present
+
 Local knowledge:      If either coder says it was present, marked as present
+
 Actors:               If coders do not agree, all answers are accepted
+
 Equity in planning:   If either coder says it was present, marked as present
+
 Equity in targeting:  If either coder says it was present, marked as present
+
 Type of response:     If coders do not agree, all answers are accepted
+
 Implementation tools: If coders do not agree, all answers are accepted
+
 Hazard:               If coders do not agree, all answers are accepted
+
 Exposure:             If coders do not agree, all answers are accepted
+
 Links to Risk:        If coders do not agree, all answers are accepted
+
 Adaptation Finance:   If either coder says it was present, marked as present
+
 Finance Costs:        If coders do not agree, all answers are accepted
+
 Depth:                If coders do not agree, all answers are accepted
+
 Scope:                If coders do not agree, all answers are accepted
+
 Speed:                If coders do not agree, all answers are accepted
+
 Evidence of Reduced Risk: If either coder says it was present, marked as present
+
 Indicators:           If either coder says it was present, marked as present
+
 Maladaptation:        If coders do not agree, all answers are accepted
+
 Cobenefits:           If coders do not agree, all answers are accepted
+
 Approach Limits:      If either coder says true, marked as true
 
 For Implementation Stage - describing how widespread the adaptation response is described - our analysis requires a single answer. 
 Coders selected a ersponse form one of 5 drop-down options: 
+
 "Vulnerability assessment and/or early planning" 
+
 "Adaptation planning & early implementation"
+
 "Implementation expanding"
+
 "Implementation widespread"
+
 "Evidence of risk reduction associated with adaptation" 
 
 These are ranked 1-5 (1 being "vulnerability assessment" and 5 being "evidence of risk reduction"). When two coders differ, the code
