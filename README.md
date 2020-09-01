@@ -1,4 +1,4 @@
-# Intercoder-Reliability-Rec
+# Methods and Rationale
 
 Global Adaptation Mapping Initiative (GAMI)
 
