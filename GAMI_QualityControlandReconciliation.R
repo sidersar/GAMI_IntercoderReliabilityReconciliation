@@ -1,10 +1,9 @@
 # GAMI Quality Control Coder Reliability & Intercoder Reconciliation
 # ARSiders (siders@udel.edu)
 # Spring 2020
-# Mozilla Public License 2.0 (https://www.mozilla.org/en-US/MPL/2.0/)
-
 
 # ===== set working directory
+# If Internet routines won't load, temp fix: uninstall R4.0.0
 
 # =============== IMPORT DATA 
 
@@ -12,9 +11,6 @@
 data <- read.csv("GAMI_MasterData_5.18.20.csv")
 teams.table <- read.csv("Teams.csv")
 source("GAMI_QualityControlFunctions.R")
-
-# ===== clean data
-data <- cleandata(data)
 
 # =============== QUALITY CONTROL 
 
@@ -27,7 +23,9 @@ data <- cleandata(data)
   # compare exclusion and inclusion rates to team averages (of coders who coded more than 20 papers)
 
 rates <- ratescomparison(data,teams.table,cutoff.bl=10,cutoff.inc=10) 
-# first number is % blanks accepted; second is difference from average considered "unreliable"
+# cutoff.bl is % blanks accepted as "reliable"
+# cutoff.inc is difference between indiv inclusion/exclusion rate and team average considered "reliable"
+# % blanks or deviation above these numbers will flag coder as "unreliable"
 
 # ===== Designate "Unreliable"
 unrelcoders <- unreliablecoders(rates)
@@ -53,17 +51,19 @@ source("GAMI_IntercodeReconciliationFunctions.R")
 # articles already reviewed 
 reccode <- read.csv("Articles_NeedReview2020-04-14_Reconciled.csv")
 
-# ===== Identify articles that still need human review 
-articles4review<-reconcileupdate(data,unrelcoders,reccode)
-
-# export results 
-csvFileName2 <- paste("Articles4HumanReview",Sys.Date(),".csv",sep="")
-write.csv(articles4review, file=csvFileName2)
-
-# ===== Update data with human reviewed entries 
-data2<-reconciledata(data,unrelcoders,reccode)
+# if need to D articles: else move to reconciliation
+    # ===== Identify articles that still need human review 
+    articles4review<-reconcileupdate(data,unrelcoders,reccode)
+    
+    # export results 
+    csvFileName2 <- paste("Articles4HumanReview",Sys.Date(),".csv",sep="")
+    write.csv(articles4review, file=csvFileName2)
 
 # ===== Reconcile intercoder responses
+
+# update with human-reviewed articles 
+data2<-reconciledata(data,unrelcoders,reccode)    
+# run reconciliation logic
 reconcile <-reconciliation(data2,unrelcoders,reccode)
 
 # == export results
