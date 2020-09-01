@@ -4,15 +4,13 @@ Global Adaptation Mapping Initiative (GAMI)
 
 Coder Reliability Check and Intercoder Reconciliation
 
-Rationale for Reliability Check
+1  Rationale for Reliability Check
 
 Over 100 coders contributed to the GAMI project. They coded almost 3000 articles. 
 
 To enable cross-article comparisons, it is important to make sure coders are following the coding guidelines and answering all 
 (or almost all) questions for each article. The quality control (also called a reliability check) examines the responses given by 
 each coder and identifies coders who do not provide complete codes (answer all questions). 
-
-Completeness
 
 Coder responses to 16 questions are examined. These questions are considered important for the analysis, are not dependent
 on any other questions, and are relatively straightforward (e.g., TRUE/FALSE, name a continent). Coders who left more than 10% of these 
@@ -24,9 +22,12 @@ Actors undertaking adaptation (drop-down menu), Type of adaptation response (dro
 (drop-down menu), Exposure (open text), Implementation (drop-down menu), Depth (open text), Scope (open text), Speed (open text), 
 Evidence of reduced risk (True/False), Indicators of Success (True/False), Limits approached (True/False)
 
-Note: We originally checked over- or under-inclusion rates relative to those of other team members, but this presented too much uncertainty as to the "true" answer, so we removed this step.
+Note: We originally checked over- or under-inclusion rates relative to those of other team members, but this presented too much uncertainty 
+as to the "true" answer, so we removed this step.
 
-Rationale for Intercoder Reconciliation 
+2  Intercoder Reconciliation 
+
+Rationale
 
 Articles were divided into 4 cases depending on whether they were coded by one or more coders and whether those coders were reliable
 or unreliable. 
