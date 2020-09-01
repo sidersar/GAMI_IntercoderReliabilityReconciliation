@@ -2,8 +2,6 @@
 # Functions to be Sourced
 # ARSiders (siders@udel.edu)
 # Spring 2020
-# Mozilla Public License 2.0 (https://www.mozilla.org/en-US/MPL/2.0/)
-
 
 library(dplyr)
 library(pracma)
@@ -85,7 +83,7 @@ cleandata <- function(data){
   data[,35] <- trimws(data[,35])
   data[,36] <- as.character(data[,36])
 
-  #correcting some imports by l.berrangford & alexandra.lesnikowski
+  #correcting imports by l.berrangford & alexandra.lesnikowski
   if ((data[,2]=="l.berrangford") || (data[,2]=="alexandra.lesnikowski")){
     if (data[,5]=="NS"){
       data[,2] <- "nick.simpson"
@@ -94,6 +92,9 @@ cleandata <- function(data){
       data[,2] <- "siders"
     }
   }
+  # removing lines marked as duplicate by LBF or AL
+  # removing articles marked not include by LBF or AL
+  data <- LBFALexclude(data)
   
   # cleaning data to have only one implementation stage
   data[,66]<-NA
@@ -164,9 +165,89 @@ cleandata <- function(data){
     }
   }
   data[,66] <- as.numeric(data[,66])
+  
+  data<-duplicates(data)
+  
+  datanames<- c("Article.ID", "User.Name","Resolve", "Include","Coder.initials",
+      "Summarize", "Sufficiency","1.1.Geography", "1.1.1.Geography-Country",
+      "1.2.Sector", "1.3.Cross.cutting.topics", "1.4.Indigenous.knowledge",
+      "1.5.Local.knowledge", "2.1.1.Actors.Institutions", "2.1.2.Actors-Other",
+      "2.1.3.Actors-QUOTES", "2.2.1.Equity-Planning", "2.2.2.Equity-PlanOther",
+      "2.2.3.Equity-PlanQUOTES", "2.3.1.Equity-Targeting","2.3.2.Equity-TarOther",
+      "2.3.3.Equity-TarQUOTES", "3.1.1.ResponseType", "3.1.2.Response-QUOTES",
+      "3.2.1.Implementation.tools", "3.2.2.ImpTools-QUOTES", "3.3.1.Hazards",
+      "3.3.2.Hazards-Other",  "3.3.3.Hazards-QUOTES", "3.4.1.Exposure.vulnerability",
+      "3.4.2.Exposure-Other", "3.4.3.Exposure-QUOTES","3.5.1.Link.to.risks",
+      "3.5.2.Links-QUOTES", "4.1.1.Implementation","4.1.2.Implement-QUOTES",
+      "4.2.Finance","4.3.Costs", "4.4.1.Depth", "4.4.2.Depth-QUOTES", "4.5.1.Scope",
+      "4.5.2.Scope-QUOTES", "4.6.1.Speed", "4.6.2.Speed-QUOTES", "5.1.1.Reduced.risk",
+      "5.1.2.Reduced.risk-QUOTES","5.2.1.Indicators", "5.2.2.Indicators-QUOTES",
+      "5.3.1.Maladaptation", "5.3.2.Maladapt-QUOTES", "5.4.1.Co.benefits",
+      "5.4.2.Co.benefit-QUOTES", "6.1.Limits", "6.2.Limits-Describe", "6.3.Hard.soft",
+      "6.4.1.Approach.limits", "6.4.2.Approach-JUSTIFY", "7.1.Methods", "7.2.Coherence",
+      "7.3.Adequacy", "7.4.Relevance","User.Note","Title", "Journal","Authors", 
+      "NumericScoreImplementationStage")
+  names(data)<-datanames
   return(data)  
 }
 
+
+# combining articles that are the same article but have distinct Article IDs
+duplicates <- function(data){
+  titles <- as.vector(unique(data$Title, incomparables = FALSE))
+  articles <- as.vector(unique(data$ï..Article.ID, incomparables = FALSE))
+  data2 <- data
+  duplicates.count <- 0
+  for (i in 1:length(titles)){
+    d <- data2[data2$Title == titles[i],]
+    if (all(d$Authors==d[1,65])){
+      dups <- as.data.frame(table(d$ï..Article.ID))
+      if (nrow(dups)>1){
+        duplicates.count <- duplicates.count+1
+      }
+      artID <- d[1,1]
+      data2[data2$Title == titles[i],1] <- artID
+    }
+  }
+  print(c("Number article IDs before cleaning",length(articles)))
+  print(c("Number of duplicates",duplicates.count))
+  articles2 <- as.vector(unique(data2$ï..Article.ID, incomparables = FALSE))
+  print(c("Number article IDs after cleaning",length(articles2))) 
+  return(data2)
+}
+
+
+# if LBF or AL marks as "duplicate" or "two" - delete that line
+# if LB or AL makes any other comment, delete that whole article 
+LBFALexclude <- function(data){
+  RemoveArt <-NA
+  LBFAL2<-as.data.frame(matrix(ncol=ncol(data)))
+  dim(LBFAL2)
+  colnames(LBFAL2)<-colnames(data)
+  data[,6] <- as.character(data[,6])
+  data[,5] <- as.character(data[,5])
+  initials <-  c("LBF","AL")
+  LBFAL <- data[data[,5] %in% initials,]
+  print(dim(LBFAL))
+  for (i in 1:nrow(LBFAL)){
+    summary <- unlist(strsplit(LBFAL[i,6],split=' ', fixed=TRUE))
+    if (("duplicate" %in% summary) || ("two" %in% summary)){
+      LBFAL2 <- rbind(LBFAL2,LBFAL[i,])
+    }
+    else {
+      RemoveArt <- c(RemoveArt,LBFAL[i,1])
+    }
+  }
+  data<-setdiff(data,LBFAL2)
+  RemoveArt<-RemoveArt[-1]
+  RemoveArt<- as.vector(unique(RemoveArt, incomparables = FALSE))
+  print(c("Articles Screened by LBF or AL",length(RemoveArt)))
+  Remove <- data[data[,1] %in% RemoveArt,]
+  data2 <- setdiff(data,Remove)
+  return(data2)
+}
+
+#test<-LBFALexclude(data)
 
 
 
@@ -176,16 +257,17 @@ cleandata <- function(data){
 
 # check that coders completed the coding and did not leave too many questions unanswered
 
-# calcluate % blank answers to important questions 
+# calculate % blank answers to important questions 
 
 blanks <- function(data,cutoff.bl){
   coders <-as.vector(unique(data[,2], incomparables = FALSE))
-  table <- as.data.frame(matrix(nrow=length(coders), ncol=7))
-  colnames(table) <- c("User","Articles","ImpBlanks","%Total","%Imp","TotalSig","ImpSig")
+  table <- as.data.frame(matrix(nrow=length(coders), ncol=5))
+  colnames(table) <- c("User","Articles Coded","Articles Inc", "ImpBlanks","%Imp")
   # cycle through all coders  
   for (j in 1:length(coders)){
     # how many articles coded
     num.coded <-0
+    num.inc <- 0
     count <- 0    # set blank count to 0
     fullcode <- 0
     # cycle through all articles
@@ -196,6 +278,7 @@ blanks <- function(data,cutoff.bl){
       }
       # user tagged article include and sufficient = true
       if ((data[i,2]==coders[j]) & (data[i,4]==TRUE) & data[i,7]==TRUE){
+        num.inc <-num.inc+1
         # count blanks in important questions
         # geography
         if (trimws(data[i,8])=="") {
@@ -248,11 +331,13 @@ blanks <- function(data,cutoff.bl){
         count <- count + lncount 
         fullcode <- fullcode + 1
       }
+      table[j,1] <- coders[j]
       table[j,2] <- num.coded
-      table[j,3] <- count
-      ful <- as.numeric(count/(fullcode*64))*100
+      table[j,3] <- num.inc
+      table[j,4] <- count
+#      ful <- as.numeric(count/(fullcode*64))*100
       im <- as.numeric(count/(fullcode*18))*100
-      table[j,4] <- as.numeric(format(ful,digits=2))
+#      table[j,4] <- as.numeric(format(ful,digits=2))
       table[j,5] <- as.numeric(format(im,digits=2))
     }
   }
